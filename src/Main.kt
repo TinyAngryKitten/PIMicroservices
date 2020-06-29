@@ -1,3 +1,4 @@
+import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
 import config.host
 import config.ip
@@ -14,7 +15,7 @@ import org.koin.core.qualifier.named
 private val logger = KotlinLogging.logger{}
 
 class Main : KoinComponent {
-    val config: ConfigurationProperties by inject()
+    val config : Configuration by inject()
     val topics: Map<String,Int> by inject(named("topics"))
     val client: MqttClient by inject()
 
