@@ -50,7 +50,6 @@ class WoLClient {
     }
 
     fun wake(mac:String,host:String,port:Int = 9) : WoLResult {
-        print("waking $mac ($host)")
         return when (val addressAsBytes = macAddressToBytes(mac)) {
             is Some -> sendPacket(addressAsBytes.t, host, port)
             is None -> WoLResult.InvalidMacAddresss
