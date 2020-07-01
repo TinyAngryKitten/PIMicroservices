@@ -12,7 +12,6 @@ import io.vertx.mqtt.MqttClientOptions
 import io.vertx.mqtt.messages.MqttConnAckMessage
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import wakeonlan.WoLClient
 
 val mainModule = module {
     single{
@@ -32,8 +31,6 @@ val mainModule = module {
     single(named("disconnectHandler")) { SimpleDisconnectHandler as Handler<*>}
     single(named("connectHandler")) { SimpleConnectHandler as Handler<*>}
     single(named("publishHandler")) { SimplePublishHandler as Handler<*>}
-
-    single{WoLClient()}
 
     //add topics to subscribe to
     single(named("topics")) {
