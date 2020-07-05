@@ -1,9 +1,6 @@
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
-import config.host
-import config.ip
-import config.konfigModule
-import config.mainModule
+import config.*
 import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
@@ -13,13 +10,16 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import io.vertx.core.Handler
-import javax.xml.ws.AsyncHandler
+import wmi.getWMIData
 
 private val logger = KotlinLogging.logger{}
 
 class Main : KoinComponent {
     val config : Configuration by inject()
     val client: MqttClient by inject()
+
+    val publish : (Map<String,String>) -> Unit by inject(named("publish"))
+    val getPCStatMap : () -> Map<String,String> by inject(named("getPCStatMap"))
 
     fun infiniteLoop() {
 
@@ -31,7 +31,10 @@ class Main : KoinComponent {
                 client.publishHandler(get(named("publishHandler")))
             }
 
-            Thread.sleep(10000)
+            //publish all stats about the pc for each loop
+            publish(getPCStatMap())
+
+            Thread.sleep(1000* config[pollingrate].toLong())
         }
     }
 

@@ -6,6 +6,8 @@ import java.io.File
 
 val host by stringType
 val ip by intType
+val pollingrate by intType
+val pcname by stringType
 
 val konfigModule = module {
     single{

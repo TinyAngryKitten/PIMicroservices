@@ -1,8 +1,10 @@
 package config
 
+import com.natpryce.konfig.Configuration
 import handlers.SimpleConnectHandler
 import handlers.SimpleDisconnectHandler
 import handlers.SimplePublishHandler
+import handlers.SimplePublisher
 import io.netty.handler.codec.mqtt.MqttQoS
 import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
@@ -12,6 +14,7 @@ import io.vertx.mqtt.MqttClientOptions
 import io.vertx.mqtt.messages.MqttConnAckMessage
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import wmi.getWMIData
 
 val mainModule = module {
     single{
@@ -34,8 +37,16 @@ val mainModule = module {
 
     //add topics to subscribe to
     single(named("topics")) {
-        mapOf(
-            "computers/+/power" to MqttQoS.AT_MOST_ONCE.value()
-        )
+        mapOf<String,Int>()
     }
+
+    single(named("publish")){
+        val publisher = SimplePublisher()
+
+        return@single { map:Map<String,String> -> publisher.publish(map)}
+        }
+
+    single(named("getPCStatMap")) { { getWMIData() } }
+
+    single(named("baseTopic")) {"computer/${get<Configuration>()[pcname]}/"}
 }
