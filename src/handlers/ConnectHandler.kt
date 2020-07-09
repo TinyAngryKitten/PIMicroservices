@@ -18,8 +18,6 @@ object SimpleConnectHandler : Handler<AsyncResult<MqttConnAckMessage>>, KoinComp
     override fun handle(event: AsyncResult<MqttConnAckMessage>?) {
         logger.info { "Connection established to broker" }
 
-        topics.entries.forEach {println("Subscribing to topic: $${it.key}")}
-
         topics.forEach{client.subscribe(it.key,it.value) }
     }
 }

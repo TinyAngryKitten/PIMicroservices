@@ -88,6 +88,6 @@ private fun parseWMIData(list : ArrayList<Array<String>>) : Map<String, Any?> {
                 "gpu/usedVRam" to usedVRam,
                 "gpu/totalVRam" to totalVRam,
                 "gpu/fan" to gpuFan
-        ).filter { it.value != null}
+        ).filter { it.value != null && it.value != "null" }
     return result
 }
