@@ -57,7 +57,7 @@ private fun parseWMIData(list : ArrayList<Array<String>>) : Map<String, Any?> {
         if (each[0] == "CPU Total" && each[1] == "Load")
             cpuLoad = each[2]
         else if (each[0] == "GPU Core" && each[1] == "Load")
-            cpuLoad = each[2]
+            gpuLoad = each[2]
         else if (each[0] == "CPU Fan" && each[1] == "Fan")
             cpuFan = each[2]
         else if (each[0] == "GPU" && each[1] == "Fan")
