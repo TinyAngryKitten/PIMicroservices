@@ -35,7 +35,7 @@ val mainModule = module {
     //add topics to subscribe to
     single(named("topics")) {
         mapOf(
-            "computers/+/power" to MqttQoS.AT_MOST_ONCE.value()
+            "" to MqttQoS.AT_MOST_ONCE.value()
         )
     }
 }
