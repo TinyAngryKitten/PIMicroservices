@@ -26,9 +26,7 @@ class Main : KoinComponent {
                 client.connect(config[ip], config[host], get(named("connectHandler")))
                 //client.publishHandler(get(named("publishHandler")))
 
-                while(client.isConnected) {
-                    Thread.sleep(config[lookupInterval]*1000L)
-                }
+                
             }
 
             Thread.sleep(10000)

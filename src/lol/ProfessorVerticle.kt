@@ -15,7 +15,7 @@ class ProfessorVerticle : AbstractVerticle() {
             .expect(ResponsePredicate.SC_OK)
 
     override fun start() {
-//"https://porofessor.gg/live/euw/tinyangrykitten"
+        //"https://porofessor.gg/live/euw/tinyangrykitten"
         // The summoner is not in-game, please retry later. The game must be on the loading screen or it must have started.
         vertx.setPeriodic(3000) { _ -> fetchJoke() }
     }
