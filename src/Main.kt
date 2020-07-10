@@ -1,9 +1,6 @@
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
-import config.host
-import config.ip
-import config.konfigModule
-import config.mainModule
+import config.*
 import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
@@ -13,6 +10,8 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import io.vertx.core.Handler
+import sun.net.www.http.HttpClient
+import java.net.URL
 import javax.xml.ws.AsyncHandler
 
 private val logger = KotlinLogging.logger{}
@@ -28,7 +27,11 @@ class Main : KoinComponent {
                 logger.info { "attempting to connect to broker..." }
 
                 client.connect(config[ip], config[host], get(named("connectHandler")))
-                client.publishHandler(get(named("publishHandler")))
+                //client.publishHandler(get(named("publishHandler")))
+
+                while(client.isConnected) {
+                    Thread.sleep(config[lookupInterval]*1000L)
+                }
             }
 
             Thread.sleep(10000)
