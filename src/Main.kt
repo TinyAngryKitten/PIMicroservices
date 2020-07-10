@@ -13,7 +13,6 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import io.vertx.core.Handler
-import javax.xml.ws.AsyncHandler
 
 private val logger = KotlinLogging.logger{}
 
