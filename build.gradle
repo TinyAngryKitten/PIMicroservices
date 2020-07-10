@@ -28,6 +28,7 @@ allprojects {
         jcenter()
         maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
         maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local/" } // for SNAPSHOT builds
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -45,10 +46,20 @@ dependencies {
 
     implementation "org.koin:koin-core:2.1.5"
 
-    compile 'io.github.microutils:kotlin-logging:1.7.10'
+    implementation "com.github.Inkapplications.Shade:shade:1.1.0"
 
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+
+    implementation 'io.github.microutils:kotlin-logging:1.7.10'
+
+    implementation "org.mongodb:mongodb-driver-sync:4.0.5"
+    implementation 'org.litote.kmongo:kmongo:4.0.2'
+
+    implementation 'io.github.microutils:kotlin-logging:1.7.10'
+
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
 
     implementation group: 'com.natpryce', name: 'konfig', version: '1.6.10.0'
 

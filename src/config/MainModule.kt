@@ -1,17 +1,22 @@
 package config
 
+import com.mongodb.ConnectionString
+import com.natpryce.konfig.Configuration
 import handlers.SimpleConnectHandler
 import handlers.SimpleDisconnectHandler
 import handlers.SimplePublishHandler
+import hue.MongoDBTokenStorage
+import hue.HueController
+import inkapplications.shade.Shade
+import inkapplications.shade.auth.TokenStorage
 import io.netty.handler.codec.mqtt.MqttQoS
-import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.MqttClientOptions
-import io.vertx.mqtt.messages.MqttConnAckMessage
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.litote.kmongo.KMongo
 
 val mainModule = module {
     single{
@@ -28,6 +33,35 @@ val mainModule = module {
         ) as MqttClient
     }
 
+    single {
+        Shade(
+                appId = "MqttShadeApp",
+                initBaseUrl = get<Configuration>()[bridgeIp],
+                storage = get()
+        )
+    }
+
+    single {
+        val config : Configuration by inject()
+
+        val user = config[dbuser]
+        val password = config[dbpassword]
+        val host = config[dburl]
+        val port = config[dbport]
+
+        ConnectionString(
+                "mongodb://$user:$password@$host:$port/?authSource=admin&readPreference=primary"
+        )
+    }
+
+    factory {
+        KMongo.createClient(get<ConnectionString>())
+    }
+
+    single<TokenStorage> { MongoDBTokenStorage() }
+
+    single { HueController() }
+
     single(named("disconnectHandler")) { SimpleDisconnectHandler as Handler<*>}
     single(named("connectHandler")) { SimpleConnectHandler as Handler<*>}
     single(named("publishHandler")) { SimplePublishHandler as Handler<*>}
@@ -35,7 +69,10 @@ val mainModule = module {
     //add topics to subscribe to
     single(named("topics")) {
         mapOf(
-            "" to MqttQoS.AT_MOST_ONCE.value()
+                "light/group/+/state" to MqttQoS.AT_MOST_ONCE.value(),
+                "light/group/+/brightness" to MqttQoS.AT_MOST_ONCE.value(),
+                "light/group/+/color" to MqttQoS.AT_MOST_ONCE.value(),
+                "lights/group/+/update" to MqttQoS.AT_MOST_ONCE.value()
         )
     }
 }
