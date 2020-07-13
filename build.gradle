@@ -42,6 +42,7 @@ def arrow_version = "0.10.5"
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "io.vertx:vertx-mqtt:3.9.1"
+    implementation 'io.vertx:vertx-consul-client:3.9.1'
 
     implementation "org.koin:koin-core:2.1.5"
 

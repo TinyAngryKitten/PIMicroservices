@@ -5,7 +5,9 @@ import org.koin.dsl.module
 import java.io.File
 
 val host by stringType
-val ip by intType
+val port by intType
+val consulhost by stringType
+val consulport by intType
 
 val konfigModule = module {
     single{
