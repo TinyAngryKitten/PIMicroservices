@@ -37,6 +37,7 @@ class Main : KoinComponent {
 
                 client.connect(config[port], config[host], get(named("connectHandler")))
                 //client.publishHandler(get(named("publishHandler")))
+                
 
 
 
