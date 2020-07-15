@@ -24,7 +24,7 @@ jobs:
         java-version: 1.8
     - uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.5
+        gradle-version: 4.10.3
         arguments: shadowJar
     - uses: nelonoel/branch-name@v1
     - name: Prepare
