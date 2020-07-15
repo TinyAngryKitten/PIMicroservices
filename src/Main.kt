@@ -35,7 +35,7 @@ class Main : KoinComponent {
             if (!client.isConnected) {
                 logger.info { "attempting to connect to broker..." }
 
-                client.connect(config[ip], config[host], get(named("connectHandler")))
+                client.connect(config[port], config[host], get(named("connectHandler")))
                 //client.publishHandler(get(named("publishHandler")))
 
             }
