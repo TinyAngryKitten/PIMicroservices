@@ -31,7 +31,6 @@ allprojects {
     }
 }
 
-
 sourceSets {
     main.kotlin.srcDirs += 'src'
 }
