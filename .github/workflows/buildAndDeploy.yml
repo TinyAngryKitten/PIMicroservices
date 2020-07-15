@@ -31,7 +31,7 @@ jobs:
       id: prepare
       run: |
         DOCKER_IMAGE=tinyangrykitten/${BRANCH_NAME}
-        DOCKER_PLATFORMS=linux/amd64,linux/arm/v7,linux/arm64
+        DOCKER_PLATFORMS=linux/arm64
         VERSION=latest
         TAGS="--tag ${DOCKER_IMAGE}:${VERSION}"
         echo ::set-output name=docker_image::${DOCKER_IMAGE}
