@@ -1,3 +1,6 @@
-FROM openjdk:8
-COPY build/libs/wakeonlan-all.jar .
-CMD ["java", "-jar", "wakeonlan-all.jar"]
+FROM arm64v8/openjdk:7
+COPY . /usr/src/myapp
+WORKDIR /usr/src/myapp
+
+RUN echo $(ls)
+CMD ["java", "-jar", "build/libs/wakeonlan-all.jar"]
