@@ -1,30 +1,43 @@
 package lol
 
+import io.netty.handler.codec.mqtt.MqttQoS
 import io.vertx.core.AbstractVerticle
+import io.vertx.core.buffer.Buffer
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.client.predicate.ResponsePredicate
 import io.vertx.ext.web.codec.BodyCodec
+import io.vertx.mqtt.MqttClient
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class ProfessorVerticle : AbstractVerticle() {
+class ProfessorVerticle : AbstractVerticle(), KoinComponent {
+    val users : String by inject()
+    val mqttClient : MqttClient by inject()
 
-    val request = WebClient.create(vertx) // (1)
-            .get(443, "https://porofessor.gg", "/live/euw/tinyangrykitten")
-            .ssl(true)
-            .putHeader("Accept", "application/json")
-            .`as`(BodyCodec.string())
-            .expect(ResponsePredicate.SC_OK)
+    val webClients = users
+            .split(",")
+            .map {username ->
+                username to WebClient.create(vertx)
+                .get(443, "https://porofessor.gg", "/live/euw/$username")
+                .ssl(true)
+                .putHeader("Accept", "application/json")
+                .`as`(BodyCodec.string())
+                .expect(ResponsePredicate.SC_OK)
+            }
 
     override fun start() {
         //"https://porofessor.gg/live/euw/tinyangrykitten"
         // The summoner is not in-game, please retry later. The game must be on the loading screen or it must have started.
-        vertx.setPeriodic(3000) { _ -> fetchJoke() }
+        vertx.setPeriodic(3000) { _ -> fetchUserGames() }
     }
 
-    fun fetchJoke() {
-        request.send { asyncResult ->
-            if (asyncResult.succeeded()) {
-                val isIngame = asyncResult.result().body().contains("The summoner is not in-game, please retry later")
-                
+    fun fetchUserGames() {
+        webClients.forEach { it.second.send {
+            asyncResult ->
+                if (asyncResult.succeeded()) {
+                    val isInGame = !asyncResult.result().body().contains("The summoner is not in-game, please retry later")
+                    if(isInGame) mqttClient.publish("game/league/${it.first}", Buffer.buffer("ingame"), MqttQoS.AT_MOST_ONCE,false, false )
+                }
             }
         }
     }
