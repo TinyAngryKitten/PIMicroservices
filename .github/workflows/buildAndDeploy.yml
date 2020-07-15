@@ -24,14 +24,14 @@ jobs:
         java-version: 1.8
     - uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 4.10
+        gradle-version: 5.1
         arguments: shadowJar
     - uses: nelonoel/branch-name@v1
     - name: Prepare
       id: prepare
       run: |
         DOCKER_IMAGE=tinyangrykitten/${BRANCH_NAME}
-        DOCKER_PLATFORMS=linux/arm64
+        DOCKER_PLATFORMS=linux/amd64,linux/arm/v7,linux/arm64
         VERSION=latest
         TAGS="--tag ${DOCKER_IMAGE}:${VERSION}"
         echo ::set-output name=docker_image::${DOCKER_IMAGE}
