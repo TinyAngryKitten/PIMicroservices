@@ -10,6 +10,9 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import io.vertx.core.Handler
+import io.vertx.ext.consul.ConsulClient
+import io.vertx.ext.consul.ServiceOptions
+import io.vertx.core.Vertx
 
 private val logger = KotlinLogging.logger{}
 
@@ -17,7 +20,16 @@ class Main : KoinComponent {
     val config : Configuration by inject()
     val client: MqttClient by inject()
 
+    val consulClient : ConsulClient by inject()
+    val consulOptions : ServiceOptions by inject()
+    val vertx : Vertx by inject()
+
     fun infiniteLoop() {
+
+        consulClient.registerService(consulOptions) {
+            if(it.succeeded()) logger.info { "Service registered in consul" }
+            else logger.error{"Service could not be registered in consul: ${it.cause()}"}
+        }
 
         while (true) {
             if (!client.isConnected) {
@@ -25,9 +37,7 @@ class Main : KoinComponent {
 
                 client.connect(config[ip], config[host], get(named("connectHandler")))
                 //client.publishHandler(get(named("publishHandler")))
-                
 
-                
             }
 
             Thread.sleep(10000)

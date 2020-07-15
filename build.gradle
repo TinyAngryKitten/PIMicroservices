@@ -44,6 +44,7 @@ dependencies {
     implementation "io.vertx:vertx-mqtt:$vertxVersion"
     implementation "io.vertx:vertx-core:$vertxVersion"
     implementation "io.vertx:vertx-web-client:$vertxVersion"
+    implementation 'io.vertx:vertx-consul-client:3.9.1'
 
 
     implementation "org.koin:koin-core:2.1.5"

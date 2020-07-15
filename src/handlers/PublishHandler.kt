@@ -13,8 +13,8 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
 
 
     override fun handle(event: MqttPublishMessage?) {
-        val topic = event?.topicName()?:""
-        val payload = event?.payload().toString()
+        val topic = event?.topicName()?:return
+        val payload = event.payload().toString()
         
     }
 }
