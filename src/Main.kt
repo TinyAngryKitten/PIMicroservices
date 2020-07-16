@@ -57,7 +57,6 @@ class Main : KoinComponent {
                         konfigModule
                 )
             }
-
             Main().infiniteLoop()
         }
     }
