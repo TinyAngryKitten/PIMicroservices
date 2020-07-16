@@ -41,8 +41,8 @@ class ProfessorVerticle : AbstractVerticle(), KoinComponent {
                     val isInGame = !asyncResult.result().body().contains("The summoner is not in-game, please retry later")
                     if(isInGame) {
                         mqttClient.publish("game/league/${it.first}", Buffer.buffer("ingame"), MqttQoS.AT_MOST_ONCE,false, false )
-                        logger.info {"user $it.first is ingame"}
-                    }
+                        logger.info {"user ${it.first} is ingame"}
+                    } else logger.info {"user ${it.first} is not ingame"}
 
                 }
             }
