@@ -7,6 +7,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import config.bridgeIp
+import inkapplications.shade.auth.TokenStorage
 import inkapplications.shade.constructs.Percentage
 import inkapplications.shade.constructs.percent
 import inkapplications.shade.groups.GroupStateModification
@@ -18,7 +19,7 @@ private val logger = KotlinLogging.logger{}
 class HueController : KoinComponent {
     val shade : Shade by inject()
     val config : Configuration by inject()
-    val tokenStorage : MongoDBTokenStorage by inject()
+    val tokenStorage : TokenStorage by inject()
 
     fun findIdOfGroupName(name : String) = runBlocking {
         shade
