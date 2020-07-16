@@ -9,7 +9,9 @@ import wakeonlan.MachineID
 import java.io.File
 
 val host by stringType
-val ip by intType
+val port by intType
+val consulhost by stringType
+val consulport by intType
 val machines by stringType
 
 val konfigModule = module {
