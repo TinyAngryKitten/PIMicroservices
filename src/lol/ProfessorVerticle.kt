@@ -7,8 +7,11 @@ import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.client.predicate.ResponsePredicate
 import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.mqtt.MqttClient
+import mu.KotlinLogging
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+
+private val logger = KotlinLogging.logger{}
 
 class ProfessorVerticle : AbstractVerticle(), KoinComponent {
     val users : String by inject()
@@ -36,7 +39,11 @@ class ProfessorVerticle : AbstractVerticle(), KoinComponent {
             asyncResult ->
                 if (asyncResult.succeeded()) {
                     val isInGame = !asyncResult.result().body().contains("The summoner is not in-game, please retry later")
-                    if(isInGame) mqttClient.publish("game/league/${it.first}", Buffer.buffer("ingame"), MqttQoS.AT_MOST_ONCE,false, false )
+                    if(isInGame) {
+                        mqttClient.publish("game/league/${it.first}", Buffer.buffer("ingame"), MqttQoS.AT_MOST_ONCE,false, false )
+                        logger.info {"user $it.first is ingame"}
+                    }
+
                 }
             }
         }
