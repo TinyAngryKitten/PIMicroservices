@@ -12,11 +12,17 @@ import inkapplications.shade.auth.TokenStorage
 import io.netty.handler.codec.mqtt.MqttQoS
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
+import io.vertx.ext.consul.CheckOptions
+import io.vertx.ext.consul.ConsulClient
+import io.vertx.ext.consul.ConsulClientOptions
+import io.vertx.ext.consul.ServiceOptions
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.MqttClientOptions
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.KMongo
+
+val serviceName = "service"
 
 val mainModule = module {
     single{
@@ -26,9 +32,11 @@ val mainModule = module {
         }
     }
 
+    single { Vertx.vertx() }
+
     single {
         MqttClient.create(
-            Vertx.vertx(),
+            get(),
             get()
         ) as MqttClient
     }
@@ -61,6 +69,23 @@ val mainModule = module {
     single<TokenStorage> { MongoDBTokenStorage() }
 
     single { HueController() }
+
+    val config = get<Configuration>()
+    ConsulClientOptions().apply {
+        host = config[consulhost]
+        port = config[consulport]
+  } }
+
+  single<ConsulClient> { ConsulClient.create(get(),get())}
+
+  single {
+    ServiceOptions()
+    .setName(serviceName)
+    //.setId("serviceId")
+    .setTags(listOf("mqtt", "vertx"))
+    .setCheckOptions(CheckOptions().setTtl("60s"))
+    .setPort(1883)
+  }
 
     single(named("disconnectHandler")) { SimpleDisconnectHandler as Handler<*>}
     single(named("connectHandler")) { SimpleConnectHandler as Handler<*>}
