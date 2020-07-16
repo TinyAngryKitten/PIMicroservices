@@ -53,8 +53,8 @@ class Main : KoinComponent {
             logger.info { "Started" }
             startKoin {
                 modules(
-                    mainModule,
-                    konfigModule
+                        mainModule,
+                        konfigModule
                 )
             }
 
