@@ -13,6 +13,7 @@ import io.vertx.core.Handler
 import io.vertx.ext.consul.ConsulClient
 import io.vertx.ext.consul.ServiceOptions
 import io.vertx.core.Vertx
+import lol.ProfessorVerticle
 
 private val logger = KotlinLogging.logger{}
 
@@ -31,16 +32,13 @@ class Main : KoinComponent {
             else logger.error{"Service could not be registered in consul: ${it.cause()}"}
         }
 
+        ProfessorVerticle().start()
+
         while (true) {
             if (!client.isConnected) {
                 logger.info { "attempting to connect to broker..." }
 
                 client.connect(config[port], config[host], get(named("connectHandler")))
-                //client.publishHandler(get(named("publishHandler")))
-                
-
-
-
             }
 
             Thread.sleep(10000)
@@ -51,6 +49,7 @@ class Main : KoinComponent {
         @JvmStatic
         fun main(args: Array<String>) {
             logger.info { "Started" }
+
             startKoin {
                 modules(
                         mainModule,
