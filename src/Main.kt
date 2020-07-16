@@ -25,7 +25,6 @@ class Main : KoinComponent {
 
     val consulClient : ConsulClient by inject()
     val consulOptions : ServiceOptions by inject()
-    val vertx : Vertx by inject()
 
     fun infiniteLoop() {
 

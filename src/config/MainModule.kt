@@ -70,11 +70,13 @@ val mainModule = module {
 
     single { HueController() }
 
-    val config = get<Configuration>()
-    ConsulClientOptions().apply {
-        host = config[consulhost]
-        port = config[consulport]
-  } }
+    single {
+        val config = get<Configuration>()
+        ConsulClientOptions().apply {
+            host = config[consulhost]
+            port = config[consulport]
+        }
+    }
 
   single<ConsulClient> { ConsulClient.create(get(),get())}
 
@@ -97,7 +99,7 @@ val mainModule = module {
                 "light/group/+/state" to MqttQoS.AT_MOST_ONCE.value(),
                 "light/group/+/brightness" to MqttQoS.AT_MOST_ONCE.value(),
                 "light/group/+/color" to MqttQoS.AT_MOST_ONCE.value(),
-                "lights/group/+/update" to MqttQoS.AT_MOST_ONCE.value()
+                "light/group/+/update" to MqttQoS.AT_MOST_ONCE.value()
         )
     }
 }
