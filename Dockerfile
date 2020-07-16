@@ -1,6 +1,6 @@
-FROM arm64v8/openjdk:7
+FROM arm64v8/openjdk:8
 COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 
 RUN echo $(ls)
-CMD ["java", "-jar", "build/libs/wakeonlan-all.jar"]
+CMD ["java", "-jar", "/usr/src/myapp/build/libs/wakeonlan.jar"]
