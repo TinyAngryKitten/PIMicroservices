@@ -1,9 +1,6 @@
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
-import config.host
-import config.port
-import config.konfigModule
-import config.mainModule
+import config.*
 import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging

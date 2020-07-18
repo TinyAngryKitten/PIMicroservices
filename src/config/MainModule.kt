@@ -17,6 +17,7 @@ import io.vertx.mqtt.MqttClientOptions
 import io.vertx.mqtt.messages.MqttConnAckMessage
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import wakeonlan.WoLClient
 
 val serviceName = "service"
 
@@ -54,6 +55,8 @@ val mainModule = module {
         .setCheckOptions(CheckOptions().setTtl("60s"))
         .setPort(1883)
     }
+
+    single { WoLClient() }
 
     single(named("disconnectHandler")) { SimpleDisconnectHandler as Handler<*>}
     single(named("connectHandler")) { SimpleConnectHandler as Handler<*>}
