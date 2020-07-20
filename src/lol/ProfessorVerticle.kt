@@ -4,6 +4,7 @@ import com.natpryce.konfig.Configuration
 import config.users
 import io.netty.handler.codec.mqtt.MqttQoS
 import io.vertx.core.AbstractVerticle
+import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.client.predicate.ResponsePredicate
@@ -15,10 +16,11 @@ import org.koin.core.inject
 
 private val logger = KotlinLogging.logger{}
 
-class ProfessorVerticle : AbstractVerticle(), KoinComponent {
+class ProfessorVerticle :  KoinComponent {
     val config : Configuration by inject()
     val usersString : String = config[users]
     val mqttClient : MqttClient by inject()
+    val vertx : Vertx by inject()
 
     val webClients = usersString
             .split(",")
@@ -31,7 +33,7 @@ class ProfessorVerticle : AbstractVerticle(), KoinComponent {
                 .expect(ResponsePredicate.SC_OK)
             }
 
-    override fun start() {
+    fun start() {
         //"https://porofessor.gg/live/euw/tinyangrykitten"
         // The summoner is not in-game, please retry later. The game must be on the loading screen or it must have started.
         vertx.setPeriodic(3000) { _ -> fetchUserGames() }
