@@ -1,5 +1,7 @@
 package lol
 
+import com.natpryce.konfig.Configuration
+import config.users
 import io.netty.handler.codec.mqtt.MqttQoS
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.buffer.Buffer
@@ -14,10 +16,11 @@ import org.koin.core.inject
 private val logger = KotlinLogging.logger{}
 
 class ProfessorVerticle : AbstractVerticle(), KoinComponent {
-    val users : String by inject()
+    val config : Configuration by inject()
+    val usersString : String = config[users]
     val mqttClient : MqttClient by inject()
 
-    val webClients = users
+    val webClients = usersString
             .split(",")
             .map {username ->
                 username to WebClient.create(vertx)
