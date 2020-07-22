@@ -1,7 +1,6 @@
 package config
 
 import com.natpryce.konfig.*
-import jdk.nashorn.internal.runtime.regexp.joni.constants.StringType
 import org.koin.dsl.module
 import java.io.File
 
