@@ -79,7 +79,7 @@ class HueController : KoinComponent {
     fun init() =
         runBlocking {
             if (tokenStorage.getToken() == null) {
-                logger.info { "Connecting to bridge" }
+                logger.info { "Connecting to bridge, press the top bridge button" }
                 shade.auth.awaitToken()
                 logger.info { "Connected to bridge" }
             }
