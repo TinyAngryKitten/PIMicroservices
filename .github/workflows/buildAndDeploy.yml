@@ -10,6 +10,7 @@ on:
       - '*/*'       # matches every branch containing a single '/'
       - '**'        # matches every branch
       - '!master'   # excludes master
+      - '!pcstats'   # excludes pcstats
 
 jobs:
   build:
