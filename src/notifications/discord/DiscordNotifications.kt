@@ -1,6 +1,8 @@
-package notifications
+package notifications.discord
 
 import mu.KotlinLogging
+import notifications.Notification
+import notifications.NotificationSender
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -8,7 +10,6 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import org.koin.core.qualifier.named
 
 
 private val logger = KotlinLogging.logger{}
@@ -21,8 +22,8 @@ class DiscordNotifications : NotificationSender, KoinComponent {
   val discordToken: DiscordToken by inject()
 
   override fun notify(notification: Notification) {
-    val id : Int = discordToken.id
-    val token : String = discordToken.token
+    val id = discordToken.id
+    val token = discordToken.token
 
     val path : String = "/api/webhooks/$id/$token"
 
@@ -35,7 +36,7 @@ class DiscordNotifications : NotificationSender, KoinComponent {
         .newCall(request)
         .execute()
         .use { response ->
-          logger.info{"response: "+response.body.toString()}
+          logger.info{"response: ${response.code}: "+response.body.toString()}
         }
   }
 
@@ -44,7 +45,7 @@ class DiscordNotifications : NotificationSender, KoinComponent {
       {
         "username": "${notification.senderName}",
         "avatar_url": "",
-        "content": "${notification.title}\n${notification.title}"
+        "content": "**${notification.title}**\n${notification.body}"
       }
     """.trimIndent())
 }

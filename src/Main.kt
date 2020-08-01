@@ -1,10 +1,8 @@
 import com.natpryce.konfig.Configuration
-import com.natpryce.konfig.ConfigurationProperties
 import config.host
 import config.port
 import config.konfigModule
 import config.mainModule
-import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
@@ -12,14 +10,8 @@ import org.koin.core.context.startKoin
 import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
-import io.vertx.core.Handler
 import io.vertx.ext.consul.ConsulClient
 import io.vertx.ext.consul.ServiceOptions
-import io.vertx.core.Vertx
-import notifications.DiscordNotifications
-import notifications.DiscordToken
-import notifications.DiscordTokenStorage
-import notifications.Notification
 
 private val logger = KotlinLogging.logger{}
 
@@ -29,7 +21,6 @@ class Main : KoinComponent {
 
     val consulClient : ConsulClient by inject()
     val consulOptions : ServiceOptions by inject()
-    val vertx : Vertx by inject()
 
     fun infiniteLoop() {
 
@@ -37,7 +28,7 @@ class Main : KoinComponent {
             if(it.succeeded()) logger.info { "Service registered in consul" }
             else logger.error{"Service could not be registered in consul: ${it.cause()}"}
         }
-        
+
         while (true) {
             if (!client.isConnected) {
                 logger.info { "attempting to connect to broker..." }
@@ -60,8 +51,6 @@ class Main : KoinComponent {
                         konfigModule
                 )
             }
-
-            //DiscordNotifications().notify(Notification("testBod"))
 
             Main().infiniteLoop()
         }

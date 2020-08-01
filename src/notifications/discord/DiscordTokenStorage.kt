@@ -1,5 +1,6 @@
-package notifications
+package notifications.discord
 
+import arrow.syntax.function.memoize
 import com.mongodb.client.MongoClient
 import com.natpryce.konfig.Configuration
 import config.dbname
@@ -18,18 +19,20 @@ open class DiscordTokenStorage : KoinComponent {
   val config : Configuration by inject()
   open val databasename = config[dbname]
 
-   open fun fetchTokenFromDb(name : String) : DiscordToken? {
-    logger.info { "Fetching item from db" }
-    val client = get<MongoClient>()
-    val db = client.getDatabase(databasename)
-    val tokenCollection = db.getCollection<DiscordToken>()
-    val item =  tokenCollection.findOne(DiscordToken::hookName eq name)
+   open val fetchTokenFromDb =
+        {
+          name: String ->
+          logger.info { "Fetching token $name from db" }
+          val client = get<MongoClient>()
+          val db = client.getDatabase(databasename)
+          val tokenCollection = db.getCollection<DiscordToken>()
+          val item =  tokenCollection.findOne(DiscordToken::hookName eq name)
 
-    return item
-  }
+          item
+        }.memoize()
 
    open fun addToken(token : DiscordToken) {
-    logger.info{ "Adding item to db" }
+    logger.info{ "Adding token ${token.hookName} to db" }
     val client = get<MongoClient>()
     val db = client.getDatabase(databasename)
     val tokenCollection = db.getCollection<DiscordToken>()

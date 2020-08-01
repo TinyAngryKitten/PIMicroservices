@@ -19,6 +19,9 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
     override fun handle(event: MqttPublishMessage?) {
         val topic = event?.topicName()?:return
         val payload = event.payload().toString()
+
+        logger.info { "Notification received on $topic:\n $payload" }
+
         val notification = mapper.readValue(payload,Notification::class.java)
 
         if(notification != null) notificationSender.notify(notification)

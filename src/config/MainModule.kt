@@ -8,7 +8,6 @@ import handlers.SimpleConnectHandler
 import handlers.SimpleDisconnectHandler
 import handlers.SimplePublishHandler
 import io.netty.handler.codec.mqtt.MqttQoS
-import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.ext.consul.CheckOptions
@@ -18,9 +17,9 @@ import io.vertx.ext.consul.ServiceOptions
 import io.vertx.ext.web.client.WebClient
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.MqttClientOptions
-import io.vertx.mqtt.messages.MqttConnAckMessage
-import notifications.DiscordTokenStorage
-import okhttp3.OkHttp
+import notifications.discord.DiscordNotifications
+import notifications.discord.DiscordTokenStorage
+import notifications.NotificationSender
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -89,9 +88,10 @@ val mainModule = module {
     single(named("publishHandler")) { SimplePublishHandler as Handler<*>}
 
     single { DiscordTokenStorage() }
+
     single {OkHttpClient()}
     single{ get<DiscordTokenStorage>().fetchTokenFromDb("General")!! }
-
+    single{ DiscordNotifications() as NotificationSender}
     //add topics to subscribe to
     single(named("topics")) {
         mapOf<String,Int>(
