@@ -59,6 +59,8 @@ dependencies {
     implementation "io.vertx:vertx-web-client:$vertxVersion"
     implementation "io.vertx:vertx-consul-client:$vertxVersion"
 
+    implementation "org.mongodb:mongodb-driver-sync:4.0.5"
+    implementation 'org.litote.kmongo:kmongo:4.0.2'
 
     implementation "org.koin:koin-core:2.1.5"
 
