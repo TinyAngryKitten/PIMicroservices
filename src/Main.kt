@@ -16,6 +16,10 @@ import io.vertx.core.Handler
 import io.vertx.ext.consul.ConsulClient
 import io.vertx.ext.consul.ServiceOptions
 import io.vertx.core.Vertx
+import notifications.DiscordNotifications
+import notifications.DiscordToken
+import notifications.DiscordTokenStorage
+import notifications.Notification
 
 private val logger = KotlinLogging.logger{}
 
@@ -33,7 +37,7 @@ class Main : KoinComponent {
             if(it.succeeded()) logger.info { "Service registered in consul" }
             else logger.error{"Service could not be registered in consul: ${it.cause()}"}
         }
-
+        
         while (true) {
             if (!client.isConnected) {
                 logger.info { "attempting to connect to broker..." }
@@ -56,6 +60,8 @@ class Main : KoinComponent {
                         konfigModule
                 )
             }
+
+            //DiscordNotifications().notify(Notification("testBod"))
 
             Main().infiniteLoop()
         }
