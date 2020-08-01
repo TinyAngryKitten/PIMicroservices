@@ -62,6 +62,9 @@ dependencies {
     implementation "org.mongodb:mongodb-driver-sync:4.0.5"
     implementation 'org.litote.kmongo:kmongo:4.0.2'
 
+    implementation("com.squareup.okhttp3:okhttp:4.8.0")
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8"
+
     implementation "org.koin:koin-core:2.1.5"
 
     compile 'io.github.microutils:kotlin-logging:1.7.10'
