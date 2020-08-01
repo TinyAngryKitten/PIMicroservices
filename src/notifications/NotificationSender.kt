@@ -1,0 +1,5 @@
+package notifications
+
+interface NotificationSender {
+  fun notify(notification: Notification)
+}
