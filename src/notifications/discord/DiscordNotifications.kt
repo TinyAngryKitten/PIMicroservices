@@ -10,9 +10,6 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import util.append
-import util.prepend
-
 
 private val logger = KotlinLogging.logger{}
 
