@@ -1,7 +1,5 @@
 import com.natpryce.konfig.Configuration
-import com.natpryce.konfig.ConfigurationProperties
 import config.*
-import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
@@ -9,11 +7,10 @@ import org.koin.core.context.startKoin
 import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
-import io.vertx.core.Handler
 import io.vertx.ext.consul.ConsulClient
 import io.vertx.ext.consul.ServiceOptions
 import io.vertx.core.Vertx
-import lol.ProfessorVerticle
+import lol.ProfessorWatcher
 
 private val logger = KotlinLogging.logger{}
 
@@ -32,7 +29,7 @@ class Main : KoinComponent {
             else logger.error{"Service could not be registered in consul: ${it.cause()}"}
         }
 
-        ProfessorVerticle().start()
+        ProfessorWatcher().start()
 
         while (true) {
             if (!client.isConnected) {
