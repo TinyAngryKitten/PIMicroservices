@@ -23,14 +23,25 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
         val command = topicParts[3]
 
         when(command) {
-            "state" -> hueController.toggleGroup(HueName(group),payload.equals("on",true))
-            "brightness" -> hueController.changeBrightnessOfGroup(HueName(group),payload.toInt())
-            "color" -> hueController.changeColorOfGroup(HueName(group))
+            "state" -> {
+                logger.info{"updating state of $group to $payload"}
+                hueController.toggleGroup(HueName(group),payload.equals("on",true))
+            }
+            "brightness" -> {
+                logger.info{"updating brightness of $group to $payload"}
+                hueController.changeBrightnessOfGroup(HueName(group),payload.toInt())
+            }
+            "color" -> {
+                logger.info{"updating color of $group to $payload"}
+                hueController.changeColorOfGroup(HueName(group))
+            }
             "update" -> broadcastGroupState(group)
+            else -> logger.error {"message received on unrecognized topic: ${event.topicName()}"}
         }
     }
 
     private fun broadcastGroupState(group : String) {
+        logger.info{"Broadcasting group state of group: $group"}
         val state = hueController.getStateOfGroup( HueName(group) )
     }
 }

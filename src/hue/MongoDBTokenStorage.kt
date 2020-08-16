@@ -31,6 +31,8 @@ class MongoDBTokenStorage : TokenStorage, KoinComponent{
         val tokenCollection = db.getCollection<HueToken>()
         val token =  tokenCollection.find().first()
 
+        logger.info{"using hue token: $token"}
+
         client.close()
         return token?.token
     }
