@@ -1,5 +1,4 @@
 package lol
-
 import com.natpryce.konfig.Configuration
 import config.users
 import io.netty.handler.codec.mqtt.MqttQoS
@@ -10,9 +9,12 @@ import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.client.predicate.ResponsePredicate
 import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.mqtt.MqttClient
+import javafx.application.Application.launch
+import kotlinx.coroutines.*
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import kotlin.coroutines.suspendCoroutine
 
 private val logger = KotlinLogging.logger{}
 
@@ -24,6 +26,7 @@ class ProfessorWatcher :  KoinComponent {
 
     val pollingRate = 60000L
 
+    lateinit var loopJob : Job
     val webClients = usersString
             .split(",")
             .map {username ->
@@ -35,10 +38,15 @@ class ProfessorWatcher :  KoinComponent {
                 .expect(ResponsePredicate.SC_OK)
             }
 
+    //"https://porofessor.gg/live/euw/tinyangrykitten"
+    // The summoner is not in-game, please retry later. The game must be on the loading screen or it must have started.
     fun start() {
-        //"https://porofessor.gg/live/euw/tinyangrykitten"
-        // The summoner is not in-game, please retry later. The game must be on the loading screen or it must have started.
-        vertx.setPeriodic(pollingRate) { fetchUserGames() }
+        loopJob = GlobalScope.launch {
+            while(true) {
+                fetchUserGames()
+                delay(pollingRate)
+            }
+        }
     }
 
     fun fetchUserGames() {

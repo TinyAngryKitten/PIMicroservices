@@ -10,6 +10,7 @@ import org.koin.core.qualifier.named
 import io.vertx.ext.consul.ConsulClient
 import io.vertx.ext.consul.ServiceOptions
 import io.vertx.core.Vertx
+import kotlinx.coroutines.runBlocking
 import lol.ProfessorWatcher
 
 private val logger = KotlinLogging.logger{}
@@ -28,7 +29,7 @@ class Main : KoinComponent {
             if(it.succeeded()) logger.info { "Service registered in consul" }
             else logger.error{"Service could not be registered in consul: ${it.cause()}"}
         }
-
+        
         ProfessorWatcher().start()
 
         while (true) {
