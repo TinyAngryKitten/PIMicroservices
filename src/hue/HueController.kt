@@ -51,7 +51,8 @@ class HueController : KoinComponent {
     fun changeBrightnessOfGroup(group : HueName, brightness : Int) =
             modifyGroup(
                 group,
-                LightStateModification(brightness = brightness.percent)
+                if(brightness > 0) LightStateModification(brightness = brightness.percent, on = true)
+                else LightStateModification(on = false)
             )
 
     fun changeColorOfGroup(group : HueName) { TODO() }
