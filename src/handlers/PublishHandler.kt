@@ -53,7 +53,7 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
 
         client.publish(
             "$baseTopic/brightness",
-            Buffer.buffer((state.brightness as? GroupBrightness.CommonBrightness)?.brightness ?: 0),
+            Buffer.buffer(((state.brightness as? GroupBrightness.CommonBrightness)?.brightness ?: 0).toString()),
             MqttQoS.AT_MOST_ONCE,
             false,
             false
