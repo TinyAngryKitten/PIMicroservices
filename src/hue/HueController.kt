@@ -33,7 +33,6 @@ class HueController : KoinComponent {
         shade.groups.getGroup(group.id).lights
     }
 
-
     private fun modifyGroup(group : HueID, modification : LightStateModification) =
             runBlocking {
                 getLightsInGroup(group)
