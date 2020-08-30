@@ -34,7 +34,7 @@ jobs:
         DOCKER_IMAGE=tinyangrykitten/${BRANCH_NAME}
         DOCKER_PLATFORMS=linux/arm64
         VERSION=latest
-        TAGS="--tag ${DOCKER_IMAGE}:${VERSION}"
+        TAGS="--tag ${DOCKER_IMAGE}:${VERSION} --tag ${DOCKER_IMAGE}:${GITHUB_RUN_NUMBER}"
         echo ::set-output name=docker_image::${DOCKER_IMAGE}
         echo ::set-output name=version::${VERSION}
         echo ::set-output name=buildx_args::--platform ${DOCKER_PLATFORMS} \
@@ -64,5 +64,5 @@ jobs:
       with:
         webhook_id: ${{ secrets.WEBHOOK_ID }}
         webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
-        message: Docker image tinyangrykitten/${{BRANCH_NAME}} has been pushed to docker hub.
+        message: Docker image tinyangrykitten/${{env.BRANCH_NAME}} has been pushed to docker hub.
         username: "Builder bot"
