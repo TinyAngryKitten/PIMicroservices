@@ -58,3 +58,11 @@ jobs:
       if: success()
       run: |
         docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
+    - name: send message
+      if: success()
+      uses: appleboy/discord-action@master
+      with:
+        webhook_id: ${{ secrets.WEBHOOK_ID }}
+        webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+        message: Docker image tinyangrykitten/${BRANCH_NAME} has been pushed to docker hub.
+        username: "Builder bot"
