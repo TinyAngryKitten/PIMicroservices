@@ -51,9 +51,12 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
         logger.info { "Broadcasting group state of group: $group" }
         val state = hueController.getStateOfGroup(HueName(group))
 
+        val brightness = (state.brightness as? GroupBrightness.CommonBrightness)?.brightness ?: 0
+        val onState = (state.onState as? GroupOnState.CommonOnState)?.isOn ?: false
+
         client.publish(
             "$baseTopic/brightness",
-            Buffer.buffer(((state.brightness as? GroupBrightness.CommonBrightness)?.brightness ?: 0).toString()),
+            Buffer.buffer(if(onState) brightness.toString() else "0"),
             MqttQoS.AT_MOST_ONCE,
             false,
             false
@@ -61,8 +64,7 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
 
         client.publish(
             "$baseTopic/state",
-            Buffer.buffer(((state.onState as? GroupOnState.CommonOnState)?.isOn
-                ?: false).toString()),
+            Buffer.buffer(onState.toString()),
             MqttQoS.AT_MOST_ONCE,
             false,
             false
