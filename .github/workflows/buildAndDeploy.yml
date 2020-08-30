@@ -64,5 +64,5 @@ jobs:
       with:
         webhook_id: ${{ secrets.WEBHOOK_ID }}
         webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
-        message: Docker image tinyangrykitten/${{BRANCH_NAME}} has been pushed to docker hub.
+        message: Docker image tinyangrykitten/${{env.BRANCH_NAME}} has been pushed to docker hub.
         username: "Builder bot"
