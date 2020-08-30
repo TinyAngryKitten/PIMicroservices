@@ -69,6 +69,7 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
             false,
             false
         )
+        
         /*client.publish(
             "$baseTopic/color",
             Buffer.buffer( (state.color as? GroupColor.CommonColor)?. ?: 0),
