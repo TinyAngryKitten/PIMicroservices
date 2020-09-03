@@ -12,6 +12,12 @@ import org.koin.core.inject
 import org.koin.core.qualifier.named
 import io.vertx.ext.consul.ConsulClient
 import io.vertx.ext.consul.ServiceOptions
+import notifications.Notification
+import notifications.NotificationSender
+import notifications.TokenStorage
+import notifications.discord.DiscordNotifications
+import notifications.discord.DiscordToken
+import java.net.InetAddress
 
 private val logger = KotlinLogging.logger{}
 

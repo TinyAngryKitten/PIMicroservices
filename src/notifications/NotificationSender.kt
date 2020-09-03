@@ -1,5 +1,5 @@
 package notifications
 
 interface NotificationSender {
-  fun notify(notification: Notification)
+  fun notify(notification: Notification, channel: String = "default")
 }

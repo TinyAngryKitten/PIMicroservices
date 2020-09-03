@@ -1,5 +1,6 @@
 package config
 
+import arrow.syntax.function.memoize
 import com.mongodb.ConnectionString
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -25,8 +26,9 @@ import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.KMongo
+import java.net.InetAddress
 
-val serviceName = "service"
+val serviceName = "notifications"
 
 val mainModule = module {
     single{
@@ -76,10 +78,11 @@ val mainModule = module {
     single {
         ServiceOptions()
         .setName(serviceName)
+            .setAddress(InetAddress.getLocalHost()?.hostAddress?:"")
         //.setId("serviceId")
         .setTags(listOf("mqtt", "vertx"))
         .setCheckOptions(CheckOptions().setTtl("60s"))
-        .setPort(1883)
+        .setPort(6669)
     }
 
     factory { WebClient.create(get()) }
@@ -92,6 +95,8 @@ val mainModule = module {
 
     single {OkHttpClient()}
     single{ get<TokenStorage>().fetchToken<DiscordToken>("General")!! }
+    single { {name: String -> get<TokenStorage>().fetchToken<DiscordToken>(name)}.memoize() }
+
     single{ DiscordNotifications() as NotificationSender}
     //add topics to subscribe to
     single(named("topics")) {
