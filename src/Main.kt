@@ -48,9 +48,11 @@ class Main : KoinComponent {
     }
 
     companion object {
+        val version = "1.0"
+
         @JvmStatic
         fun main(args: Array<String>) {
-            logger.info { "Started" }
+            logger.info { "Started (verion: $version)" }
             startKoin {
                 modules(
                         mainModule,
