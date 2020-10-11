@@ -45,7 +45,7 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
     }
 
     private fun broadcastChanges(topicParts: List<String>, group: String) =
-        broadcastGroupState("${topicParts[0]}/${topicParts[1]}/${topicParts[2]}/state", group)
+        broadcastGroupState("${topicParts[0]}/${topicParts[1]}/${topicParts[2]}/update", group)
 
     private fun broadcastGroupState(baseTopic: String, group: String) {
         logger.info { "Broadcasting group state of group: $group" }
