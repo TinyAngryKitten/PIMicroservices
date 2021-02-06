@@ -14,6 +14,14 @@ val consulhost by stringType
 val consulport by intType
 val machines by stringType
 
+
+val dbuser by stringType
+val dbpassword by stringType
+val dbport by intType
+val dburl by stringType
+val dbname by stringType
+
+
 val konfigModule = module {
 
     //exract machine ids from config
