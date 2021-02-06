@@ -2,19 +2,16 @@ package lol
 import com.natpryce.konfig.Configuration
 import config.users
 import io.netty.handler.codec.mqtt.MqttQoS
-import io.vertx.core.AbstractVerticle
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.client.predicate.ResponsePredicate
 import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.mqtt.MqttClient
-import javafx.application.Application.launch
 import kotlinx.coroutines.*
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import kotlin.coroutines.suspendCoroutine
 
 private val logger = KotlinLogging.logger{}
 
