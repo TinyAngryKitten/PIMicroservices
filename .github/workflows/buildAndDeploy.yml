@@ -14,7 +14,8 @@ on:
 
 jobs:
   build:
-
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +35,7 @@ jobs:
         DOCKER_IMAGE=tinyangrykitten/${BRANCH_NAME}
         DOCKER_PLATFORMS=linux/arm64
         VERSION=latest
-        TAGS="--tag ${DOCKER_IMAGE}:${VERSION}"
+        TAGS="--tag ${DOCKER_IMAGE}:${VERSION} --tag ${DOCKER_IMAGE}:${GITHUB_RUN_NUMBER}"
         echo ::set-output name=docker_image::${DOCKER_IMAGE}
         echo ::set-output name=version::${VERSION}
         echo ::set-output name=buildx_args::--platform ${DOCKER_PLATFORMS} \
@@ -58,3 +59,11 @@ jobs:
       if: success()
       run: |
         docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
+    - name: send message
+      if: success()
+      uses: appleboy/discord-action@master
+      with:
+        webhook_id: ${{ secrets.WEBHOOK_ID }}
+        webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+        message: Docker image tinyangrykitten/${{env.BRANCH_NAME}} has been pushed to docker hub.
+        username: "Builder bot"

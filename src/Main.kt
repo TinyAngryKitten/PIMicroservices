@@ -19,17 +19,13 @@ class Main : KoinComponent {
     val config : Configuration by inject()
     val client: MqttClient by inject()
 
-    val consulClient : ConsulClient by inject()
-    val consulOptions : ServiceOptions by inject()
-    val vertx : Vertx by inject()
-
     fun infiniteLoop() {
 
         consulClient.registerService(consulOptions) {
             if(it.succeeded()) logger.info { "Service registered in consul" }
             else logger.error{"Service could not be registered in consul: ${it.cause()}"}
         }
-        
+
         ProfessorWatcher().start()
 
         while (true) {

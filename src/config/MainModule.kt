@@ -1,5 +1,6 @@
 package config
 
+import com.mongodb.ConnectionString
 import com.natpryce.konfig.Configuration
 import handlers.SimpleConnectHandler
 import handlers.SimpleDisconnectHandler
@@ -17,6 +18,7 @@ import io.vertx.mqtt.MqttClientOptions
 import io.vertx.mqtt.messages.MqttConnAckMessage
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.litote.kmongo.KMongo
 
 val serviceName = "service"
 
@@ -38,12 +40,29 @@ val mainModule = module {
     }
 
     single {
+        val config : Configuration by inject()
+
+        val user = config[dbuser]
+        val password = config[dbpassword]
+        val host = config[dburl]
+        val port = config[dbport]
+
+        ConnectionString(
+            "mongodb://$user:$password@$host:$port/?authSource=admin&readPreference=primary"
+        )
+    }
+
+    factory {
+        KMongo.createClient(get<ConnectionString>())
+    }
+
+    single {
         val config = get<Configuration>()
         ConsulClientOptions().apply {
             host = config[consulhost]
             port = config[consulport]
     } }
-    
+
     single<ConsulClient> { ConsulClient.create(get(),get())}
 
     single {
@@ -61,7 +80,6 @@ val mainModule = module {
 
     //add topics to subscribe to
     single(named("topics")) {
-        mapOf<String,Int>(
-        )
+        mapOf<String,Int>()
     }
 }
