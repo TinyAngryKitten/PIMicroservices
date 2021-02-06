@@ -21,11 +21,6 @@ class Main : KoinComponent {
 
     fun infiniteLoop() {
 
-        consulClient.registerService(consulOptions) {
-            if(it.succeeded()) logger.info { "Service registered in consul" }
-            else logger.error{"Service could not be registered in consul: ${it.cause()}"}
-        }
-
         ProfessorWatcher().start()
 
         while (true) {
