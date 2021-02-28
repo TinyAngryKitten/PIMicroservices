@@ -95,7 +95,7 @@ val mainModule = module {
 
     single {OkHttpClient()}
     single{ get<TokenStorage>().fetchToken<DiscordToken>("General")!! }
-    single { {name: String -> get<TokenStorage>().fetchToken<DiscordToken>(name)}.memoize() }
+    single(named("fetchDiscordToken")){ { name: String -> get<TokenStorage>().fetchToken<DiscordToken>(name)}.memoize() }
 
     single{ DiscordNotifications() as NotificationSender}
     //add topics to subscribe to

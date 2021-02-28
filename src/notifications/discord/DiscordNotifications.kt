@@ -21,12 +21,12 @@ class DiscordNotifications : NotificationSender, KoinComponent {
   val jsonType: MediaType = "application/json; charset=utf-8".toMediaTypeOrNull()!!
   val client : OkHttpClient by inject()
 
-  val fetchToken: (String)->DiscordToken by inject(named("discordTokenStorage"))
+  val fetchToken: (String)->DiscordToken by inject(named("fetchDiscordToken"))
 
 
   override fun notify(notification: Notification, channel : String) {
     val token = fetchToken(channel)
-    val path = "/api/webhooks/$token.id/${token.token}"
+    val path = "/api/webhooks/${token.id}/${token.token}"
 
     val request: Request = Request.Builder()
         .url(host+path)
