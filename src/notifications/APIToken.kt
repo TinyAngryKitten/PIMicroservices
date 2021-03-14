@@ -1,3 +1,3 @@
 package notifications
 
-abstract class APIToken(val name : String) {}
+abstract class APIToken(val name : String)

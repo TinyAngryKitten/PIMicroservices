@@ -37,4 +37,11 @@ open class TokenStorage : KoinComponent {
 
     tokenCollection.insertOne(token)
   }
+
+  inline fun <reified T: APIToken> fetchAll() : List<T?> {
+    val client = get<MongoClient>()
+    val db = client.getDatabase(databasename)
+    val tokenCollection = db.getCollection<T>()
+    return tokenCollection.find().toList()
+  }
 }

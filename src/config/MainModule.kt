@@ -97,7 +97,6 @@ val mainModule = module {
     single{ get<TokenStorage>().fetchToken<DiscordToken>("General")!! }
     single(named("fetchDiscordToken")){ { name: String -> get<TokenStorage>().fetchToken<DiscordToken>(name)}.memoize() }
 
-    single{ DiscordNotifications() as NotificationSender}
     //add topics to subscribe to
     single(named("topics")) {
         mapOf<String,Int>(
