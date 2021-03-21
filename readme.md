@@ -1,5 +1,7 @@
 Tjenesten lytter på light/group/+/ brightness, state og update
 
+**Dette fungerer for øyeblikket kun for å endre hele lysgrupper** 
+
 "+" er lysgruppens navn i hue appen
 
 brightness er et tall fra 0 til 100 som styrer lysstyrken på den angitte lysgruppen
