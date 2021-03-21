@@ -8,3 +8,5 @@ state styrer av og på. Payload: on slår lys på, alt annet slår lyset av
 
 en hvilken somhelst melding på update gjør at tjenesten sender oppdatert state på alle lysgrupper
 
+state oppdateringer publiseres hver gang endringer gjøres på lysene,
+endringene publiseres på light/group/+/update/ state / brightness 
