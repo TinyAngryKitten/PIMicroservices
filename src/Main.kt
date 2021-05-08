@@ -33,7 +33,11 @@ class Main : KoinComponent {
             else logger.error{"Service could not be registered in consul: ${it.cause()}"}
         }
 
-        hueController.init()
+        try {
+            hueController.init()
+        } catch (e : Exception) {
+            logger.error(e) { "Unable to init hue controller with a token" }
+        }
 
         while (true) {
             if (!client.isConnected) {
@@ -48,15 +52,14 @@ class Main : KoinComponent {
     }
 
     companion object {
-        val version = "1.0"
-
+        val version = "1.1"
         @JvmStatic
-        fun main(args: Array<String>) {
+        fun main(args : Array<String>) {
             logger.info { "Started (verion: $version)" }
-            startKoin {
+            org.koin.core.context.startKoin {
                 modules(
-                        mainModule,
-                        konfigModule
+                    config.mainModule,
+                    config.konfigModule
                 )
             }
             Main().infiniteLoop()

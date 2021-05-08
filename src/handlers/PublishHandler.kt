@@ -3,9 +3,11 @@ package handlers
 import hue.*
 import io.netty.handler.codec.mqtt.MqttQoS
 import io.vertx.core.Handler
+import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.messages.MqttPublishMessage
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -15,6 +17,17 @@ private val logger = KotlinLogging.logger {}
 object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
     val hueController: HueController by inject()
     val client: MqttClient by inject()
+    val vertx : Vertx by inject()
+
+    init {
+        vertx.setPeriodic(1000 * 60) {
+            runBlocking {
+                for(group in hueController.shade.groups.getGroups().values) {
+                    broadcastGroupState("light/group/${group.name}/update",group.name)
+                }
+            }
+        }
+    }
 
     override fun handle(event: MqttPublishMessage?) {
         val topicParts = event?.topicName()?.split("/") ?: return
@@ -59,7 +72,7 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
             Buffer.buffer(if(onState) brightness.toString() else "0"),
             MqttQoS.AT_MOST_ONCE,
             false,
-            false
+            true
         )
 
         client.publish(
@@ -67,15 +80,15 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
             Buffer.buffer(onState.toString()),
             MqttQoS.AT_MOST_ONCE,
             false,
-            false
+            true
         )
         
         /*client.publish(
             "$baseTopic/color",
-            Buffer.buffer( (state.color as? GroupColor.CommonColor)?. ?: 0),
+            Buffer.buffer( (state.color as? GroupColor.CommonColor)?.toString() ?: "0"),
             MqttQoS.AT_MOST_ONCE,
             false,
-            false
+            true
         )*/
     }
 }
