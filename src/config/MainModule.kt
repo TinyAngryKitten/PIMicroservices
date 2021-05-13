@@ -75,7 +75,7 @@ val mainModule = module {
     }
 
     single(named("disconnectHandler")) { SimpleDisconnectHandler as Handler<*>}
-    single(named("connectHandler")) { SimpleConnectHandler as Handler<*>}
+    single<Handler<AsyncResult<MqttConnAckMessage>>>(named("connectHandler")) { SimpleConnectHandler}
     single(named("publishHandler")) { SimplePublishHandler as Handler<*>}
 
     //add topics to subscribe to

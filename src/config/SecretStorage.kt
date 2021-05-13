@@ -26,7 +26,7 @@ open class TokenStorage : KoinComponent {
     return tokenCollection.findOne(Secret::name eq name)
   }
 
-  protected fun logAction(msg: String)= logger.info {msg}
+  fun logAction(msg: String) = logger.info {msg}
 
   inline fun <reified T: Secret> addToken(token : T) {
     logAction("Adding token: ${token.name} of type ${token::class.simpleName}")

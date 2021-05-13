@@ -16,6 +16,8 @@ val dbport by intType
 val dburl by stringType
 val dbname by stringType
 
+val homeyip by stringType
+
 
 val konfigModule = module {
     single{

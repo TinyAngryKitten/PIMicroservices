@@ -19,6 +19,7 @@ import io.vertx.ext.consul.ConsulClient
 import io.vertx.ext.consul.ServiceOptions
 import io.vertx.core.Vertx
 import kotlin.reflect.full.primaryConstructor
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
 private val logger = KotlinLogging.logger{}
@@ -37,9 +38,9 @@ class Main : KoinComponent {
     @ExperimentalTime
     fun infiniteLoop() {
 
-        actions.forEach {
-            vertx.setPeriodic(it.interval.toLongMilliseconds()) {
-                it.performAction()
+        actions.forEach { action ->
+            vertx.setPeriodic(action.interval.toLongMilliseconds()) { long ->
+                action.performAction()
             }
         }
 
@@ -47,7 +48,7 @@ class Main : KoinComponent {
             if (!client.isConnected) {
                 logger.info { "attempting to connect to broker..." }
 
-                client.connect(config[port], config[host], get(named("connectHandler")))
+                client.connect(config[port], config[host], get<io.vertx.core.Handler<io.vertx.core.AsyncResult<io.vertx.mqtt.messages.MqttConnAckMessage>>>(named("connectHandler")))
                 client.publishHandler(get(named("publishHandler")))
             }
 

@@ -1,7 +1,6 @@
 package handlers
 
 import actions.MqttAction
-import arrow.syntax.collections.tail
 import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
 import io.vertx.mqtt.messages.MqttPublishMessage
@@ -18,7 +17,7 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
         MqttAction::class
             .sealedSubclasses
             .mapNotNull {
-                it.primaryConstructor?.call()
+                it.objectInstance
             }
 
     override fun handle(event: MqttPublishMessage?) {
@@ -35,6 +34,6 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
 
     private fun matches(messageTopic : List<String>, actionTopic : List<String>) : Boolean =
         if(messageTopic.isEmpty() && actionTopic.isEmpty()) true
-        else if(messageTopic.first() == actionTopic.first() || actionTopic.first() == "+") matches(messageTopic.tail(), actionTopic.tail())
+        else if(messageTopic.first() == actionTopic.first() || actionTopic.first() == "+") matches(messageTopic.drop(1), actionTopic.drop(1))
         else actionTopic.first() == "#"
 }
