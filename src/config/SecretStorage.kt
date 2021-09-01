@@ -3,9 +3,9 @@ package config
 import com.mongodb.client.MongoClient
 import com.natpryce.konfig.Configuration
 import mu.KotlinLogging
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
 import org.litote.kmongo.getCollection

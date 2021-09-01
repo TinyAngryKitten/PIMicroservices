@@ -16,6 +16,7 @@ import io.vertx.ext.consul.ServiceOptions
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.MqttClientOptions
 import io.vertx.mqtt.messages.MqttConnAckMessage
+import org.http4k.client.ApacheClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.KMongo
@@ -51,6 +52,8 @@ val mainModule = module {
             "mongodb://$user:$password@$host:$port/?authSource=admin&readPreference=primary"
         )
     }
+
+    single { ApacheClient() }
 
     factory {
         KMongo.createClient(get<ConnectionString>())

@@ -9,6 +9,7 @@ val port by intType
 val consulhost by stringType
 val consulport by intType
 
+val homeyip by stringType
 
 val dbuser by stringType
 val dbpassword by stringType

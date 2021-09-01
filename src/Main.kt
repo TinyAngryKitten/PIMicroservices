@@ -4,18 +4,13 @@ import config.host
 import config.port
 import config.konfigModule
 import config.mainModule
-import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
-import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
-import org.koin.core.get
-import org.koin.core.inject
 import org.koin.core.qualifier.named
-import io.vertx.core.Handler
-import io.vertx.ext.consul.ConsulClient
-import io.vertx.ext.consul.ServiceOptions
-import io.vertx.core.Vertx
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.component.inject
 
 private val logger = KotlinLogging.logger{}
 
