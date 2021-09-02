@@ -17,6 +17,8 @@ import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.MqttClientOptions
 import io.vertx.mqtt.messages.MqttConnAckMessage
 import org.http4k.client.ApacheClient
+import org.http4k.core.Request
+import org.http4k.core.Response
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.KMongo
@@ -32,6 +34,8 @@ val mainModule = module {
     }
 
     single { Vertx.vertx() }
+
+    single { TokenStorage() }
 
     single {
         MqttClient.create(
@@ -52,8 +56,6 @@ val mainModule = module {
             "mongodb://$user:$password@$host:$port/?authSource=admin&readPreference=primary"
         )
     }
-
-    single { ApacheClient() }
 
     factory {
         KMongo.createClient(get<ConnectionString>())
@@ -83,6 +85,8 @@ val mainModule = module {
 
     //add topics to subscribe to
     single(named("topics")) {
-        mapOf<String,Int>()
+        mapOf(
+                "action" to MqttQoS.EXACTLY_ONCE.value()
+        )
     }
 }

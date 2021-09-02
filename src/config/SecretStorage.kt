@@ -10,7 +10,6 @@ import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
 import org.litote.kmongo.getCollection
 
-
 private val logger = KotlinLogging.logger{}
 
 open class TokenStorage : KoinComponent {
@@ -19,21 +18,33 @@ open class TokenStorage : KoinComponent {
 
   inline fun <reified T: Secret> fetchToken(name : String) : T? {
     logAction("fetching token: $name of type: ${T::class.simpleName}")
-    val client = get<MongoClient>()
-    val db = client.getDatabase(databasename)
-    val tokenCollection = db.getCollection<T>()
+    return get<MongoClient>().use { client ->
+      val db = client.getDatabase(databasename)
+      val tokenCollection = db.getCollection<T>()
 
-    return tokenCollection.findOne(Secret::name eq name)
+      return@use tokenCollection.findOne(Secret::name eq name)
+    }
   }
 
-  protected fun logAction(msg: String)= logger.info {msg}
+  inline fun <reified T: Secret> removeToken(name : String) {
+    logAction("removing token: $name of type: ${T::class.simpleName}")
+    return get<MongoClient>().use { client ->
+      val db = client.getDatabase(databasename)
+      val tokenCollection = db.getCollection<T>()
+
+      tokenCollection.deleteOne(Secret::name eq name)
+    }
+  }
+
+  fun logAction(msg: String)= logger.info {msg}
 
   inline fun <reified T: Secret> addToken(token : T) {
     logAction("Adding token: ${token.name} of type ${token::class.simpleName}")
-    val client = get<MongoClient>()
-    val db = client.getDatabase(databasename)
-    val tokenCollection = db.getCollection<T>()
+    get<MongoClient>().use { client ->
+      val db = client.getDatabase(databasename)
+      val tokenCollection = db.getCollection<T>()
 
-    tokenCollection.insertOne(token)
+      tokenCollection.insertOne(token)
+    }
   }
 }

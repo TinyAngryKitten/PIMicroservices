@@ -5,8 +5,8 @@ import io.vertx.core.Handler
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.messages.MqttConnAckMessage
 import mu.KotlinLogging
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 private val logger = KotlinLogging.logger {}

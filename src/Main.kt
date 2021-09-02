@@ -1,9 +1,6 @@
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
-import config.host
-import config.port
-import config.konfigModule
-import config.mainModule
+import config.*
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
 import org.koin.core.context.startKoin
@@ -17,9 +14,9 @@ private val logger = KotlinLogging.logger{}
 class Main : KoinComponent {
     val config : Configuration by inject()
     val client: MqttClient by inject()
+    val db : TokenStorage by inject()
 
     fun infiniteLoop() {
-
         while (true) {
             if (!client.isConnected) {
                 logger.info { "attempting to connect to broker..." }
