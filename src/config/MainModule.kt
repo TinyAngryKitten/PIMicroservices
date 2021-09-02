@@ -16,6 +16,7 @@ import io.vertx.ext.consul.ServiceOptions
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.MqttClientOptions
 import io.vertx.mqtt.messages.MqttConnAckMessage
+import kotlinx.serialization.json.Json
 import org.http4k.client.ApacheClient
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -79,6 +80,12 @@ val mainModule = module {
         .setPort(1883)
     }
 
+    single {
+        Json {
+            ignoreUnknownKeys = true
+        }
+    }
+
     single(named("disconnectHandler")) { SimpleDisconnectHandler as Handler<*>}
     single(named("connectHandler")) { SimpleConnectHandler as Handler<*>}
     single(named("publishHandler")) { SimplePublishHandler as Handler<*>}
@@ -86,7 +93,9 @@ val mainModule = module {
     //add topics to subscribe to
     single(named("topics")) {
         mapOf(
-                "action" to MqttQoS.EXACTLY_ONCE.value()
+                "action" to MqttQoS.EXACTLY_ONCE.value(),
+                "state/get" to MqttQoS.AT_LEAST_ONCE.value(),
+                "state/update/+/+" to MqttQoS.EXACTLY_ONCE.value()
         )
     }
 }

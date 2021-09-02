@@ -30,4 +30,5 @@ fun sendHomeyRequest(method: Method, path : String, modifyRequest : Request.() -
                 Request(method, "http://${homeyAddress}/$path")
                         .header("Authorization", "Bearer $homeyToken")
                         .apply(modifyRequest)
+                        .also { logger.info { "request: $it" }}
         ).also { logger.info { "homey ($homeyToken) response: $it" } }

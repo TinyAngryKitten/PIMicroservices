@@ -14,7 +14,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 private val logger = KotlinLogging.logger{}
 
-private val json = Json { ignoreUnknownKeys = true }
+private val json : Json by inject(Json::class.java)
 
 private val flows : List<Flow>
     get() = sendHomeyRequest(Method.GET, "api/manager/flow/flow")
