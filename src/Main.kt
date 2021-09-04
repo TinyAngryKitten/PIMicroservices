@@ -3,6 +3,13 @@ import com.natpryce.konfig.ConfigurationProperties
 import config.*
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
+import org.http4k.client.ApacheClient
+import org.http4k.core.Method
+import org.http4k.core.Request
+import org.http4k.core.Response
+import org.http4k.core.Status.Companion.OK
+import org.http4k.server.Netty
+import org.http4k.server.asServer
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.core.component.KoinComponent
@@ -17,6 +24,9 @@ class Main : KoinComponent {
     val db : TokenStorage by inject()
 
     fun infiniteLoop() {
+
+        ApacheClient()(Request(Method.POST,"https://accounts.athom.com/login"))
+
         while (true) {
             if (!client.isConnected) {
                 logger.info { "attempting to connect to broker..." }
@@ -27,6 +37,7 @@ class Main : KoinComponent {
 
             Thread.sleep(10000)
         }
+
     }
 
     companion object {
