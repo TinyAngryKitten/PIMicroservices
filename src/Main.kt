@@ -1,13 +1,18 @@
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
 import config.*
+import homey.updateHomeyToken
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
 import org.http4k.client.ApacheClient
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
+import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
+import org.http4k.routing.bind
+import org.http4k.routing.routes
+import org.http4k.server.Jetty
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import org.koin.core.context.startKoin
@@ -25,7 +30,10 @@ class Main : KoinComponent {
 
     fun infiniteLoop() {
 
-        ApacheClient()(Request(Method.POST,"https://accounts.athom.com/login"))
+        { request : Request ->
+            updateHomeyToken(request.bodyString())
+            Response(OK)
+        }.asServer(Netty(8881)).start()
 
         while (true) {
             if (!client.isConnected) {

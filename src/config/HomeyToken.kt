@@ -1,6 +1,6 @@
 package config
 
-class HomeyToken(name : String = defaultName, val token : String) : Secret(defaultName) {
+class HomeyToken( val token : String, name : String = defaultName) : Secret(defaultName) {
     companion object {
         val defaultName = "default"
     }
