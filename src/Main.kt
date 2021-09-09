@@ -10,7 +10,6 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.body.form
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.Jetty
@@ -32,7 +31,7 @@ class Main : KoinComponent {
     fun infiniteLoop() {
 
         { request : Request ->
-            updateHomeyToken(request.form("token")!!)
+            updateHomeyToken(request.bodyString())
             Response(OK)
         }.asServer(Netty(8881)).start()
 
