@@ -93,7 +93,7 @@ val mainModule = module {
     //add topics to subscribe to
     single(named("topics")) {
         mapOf(
-                "action" to MqttQoS.EXACTLY_ONCE.value(),
+                "action/+" to MqttQoS.EXACTLY_ONCE.value(),
                 "state/get" to MqttQoS.AT_LEAST_ONCE.value(),
                 "state/update/+/+" to MqttQoS.EXACTLY_ONCE.value()
         )

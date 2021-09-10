@@ -26,7 +26,7 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
         logger.info { "owo" }
 
         when {
-            topic == "action" -> runFlow(payload)
+            topic.startsWith("action") -> runFlow(topic.takeLastWhile { it != '/' })
             topic == "state/get" -> publishUpdatedVariable(fetchVariable(payload))
             topic.startsWith("state/update/boolean/") -> publishUpdatedVariable(
                     updateState(topic.takeLastWhile { it != '/' }, payload.equals("true", true))
