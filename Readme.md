@@ -13,7 +13,7 @@ topic: state/update/**type**/**variable name**
 payload: new variable value
 
 ### Updates to state variables are also published
-topic: state/status/**variable name**
+topic: state/**variable name**
 
 payload: the new value
 

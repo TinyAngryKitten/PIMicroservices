@@ -23,14 +23,12 @@ object SimplePublishHandler : Handler<MqttPublishMessage>, KoinComponent {
         val topic = event?.topicName()?:return
         val payload = event.payload().toString()
 
-        logger.info { "owo" }
-
         when {
             topic.startsWith("action") -> runFlow(topic.takeLastWhile { it != '/' })
-            topic == "state/get" -> publishUpdatedVariable(fetchVariable(payload))
             topic.startsWith("state/update/boolean/") -> publishUpdatedVariable(
                     updateState(topic.takeLastWhile { it != '/' }, payload.equals("true", true))
             )
+            topic == "state" -> publishUpdatedVariable(fetchVariable(payload))
             else -> logger.error { "received message on unknown topic ($topic): $payload" }
         }
     }

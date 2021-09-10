@@ -94,7 +94,7 @@ val mainModule = module {
     single(named("topics")) {
         mapOf(
                 "action/+" to MqttQoS.EXACTLY_ONCE.value(),
-                "state/get" to MqttQoS.AT_LEAST_ONCE.value(),
+                "state" to MqttQoS.AT_LEAST_ONCE.value(),
                 "state/update/+/+" to MqttQoS.EXACTLY_ONCE.value()
         )
     }
