@@ -18,12 +18,17 @@ private val sendRequest : HttpHandler = ApacheClient()
 private val config : Configuration by KoinJavaComponent.inject(Configuration::class.java)
 
 private val homeyAddress : String = config[homeyip]
-private val homeyToken : String
-    get() {
-        return KoinJavaComponent.get<TokenStorage>(TokenStorage::class.java)
-                .fetchToken<HomeyToken>(HomeyToken.defaultName)!!
-                .token
-    }
+private var homeyToken : String = fetchHomeyToken()
+
+private fun fetchHomeyToken() =
+    KoinJavaComponent.get<TokenStorage>(TokenStorage::class.java)
+        .fetchToken<HomeyToken>(HomeyToken.defaultName)!!
+        .token
+
+fun invalidateHomeyToken() {
+    logger.info { "Updating homey token..." }
+    homeyToken = fetchHomeyToken()
+}
 
 fun sendHomeyRequest(method: Method, path : String, modifyRequest : Request.() -> Unit = {}) =
         sendRequest(

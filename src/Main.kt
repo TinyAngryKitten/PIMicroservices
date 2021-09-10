@@ -1,7 +1,10 @@
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
 import config.*
+import homey.invalidateHomeyToken
+import homey.publishAllVariables
 import homey.updateHomeyToken
+import io.vertx.core.Vertx
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
 import org.http4k.client.ApacheClient
@@ -24,16 +27,21 @@ import org.koin.core.component.inject
 private val logger = KotlinLogging.logger{}
 
 class Main : KoinComponent {
-    val config : Configuration by inject()
-    val client: MqttClient by inject()
-    val db : TokenStorage by inject()
+    private val config : Configuration by inject()
+    private val client: MqttClient by inject()
+    private val vertx : Vertx by inject()
 
     fun infiniteLoop() {
 
         { request : Request ->
             updateHomeyToken(request.bodyString())
             Response(OK)
-        }.asServer(Netty(8881)).start()
+        }.asServer(Netty(config[httpPort])).start()
+
+        vertx.setPeriodic(config[updateInterval].toLong() * 1000) {
+            invalidateHomeyToken()
+            publishAllVariables()
+        }
 
         while (true) {
             if (!client.isConnected) {
@@ -45,7 +53,6 @@ class Main : KoinComponent {
 
             Thread.sleep(10000)
         }
-
     }
 
     companion object {

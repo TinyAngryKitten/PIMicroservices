@@ -8,6 +8,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import org.http4k.core.Method
+import org.http4k.core.Status
 import org.koin.core.component.inject
 import org.koin.java.KoinJavaComponent
 import org.koin.java.KoinJavaComponent.inject
@@ -28,18 +29,26 @@ fun fetchVariable(name : String) : Variable? =
             it.name == name
         }
 
+private fun sendUpdateRequest(variable: Variable, newState: Boolean) =
+    sendHomeyRequest(Method.PUT, "api/manager/logic/variable/${variable.id}") {
+        body("{ \"value\" : ${if(!newState) "true" else "false" }")
+    }.also {
+        if(it.status == Status.OK) logger.info { "Updated variable ${variable.name}" }
+        else logger.error { "Failed to update variable ${variable.name}: $it" }
+    }
+
 fun updateState(name : String, newState : Boolean) : Variable? =
         fetchVariable(name)
-                ?.let { variable ->
-                    sendHomeyRequest(Method.PUT, "api/manager/logic/variable/${variable.id}") {
-                        body("{ \"value\" : ${if(!newState) "true" else "false" }")
-                    }
-                }?.bodyString()
+                ?.let { sendUpdateRequest(it, newState) }
+                ?.bodyString()
                 ?.let { json.decodeFromString(it) }
+            ?: null.also { logger.error { "Tried to update the variable $name, but it was not found" } }
+
+fun publishAllVariables() = variables.forEach(::publishUpdatedVariable)
 
 fun publishUpdatedVariable(variable : Variable?) {
     if(variable != null) client.publish(
-            "state/status/${variable.name}",
+            "state/${variable.name}",
             Buffer.buffer(variable.value.toString()),
             MqttQoS.AT_LEAST_ONCE,
             false,
