@@ -38,6 +38,8 @@ class Main : KoinComponent {
             Response(OK)
         }.asServer(Netty(config[httpPort])).start()
 
+        logger.info { "Listening for new tokens at ${config[httpPort]}" }
+
         vertx.setPeriodic(config[updateInterval].toLong() * 1000) {
             invalidateHomeyToken()
             publishAllVariables()
