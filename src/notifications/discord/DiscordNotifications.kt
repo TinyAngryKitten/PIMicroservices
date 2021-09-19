@@ -12,6 +12,7 @@ import okhttp3.RequestBody
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
+import java.nio.charset.Charset
 
 private val logger = KotlinLogging.logger{}
 
@@ -37,7 +38,7 @@ class DiscordNotifications : NotificationSender, KoinComponent {
         .newCall(request)
         .execute()
         .use { response ->
-          logger.info{"response: ${response.code}: "+response.body.toString()}
+          logger.info{"response: ${response.code}: "+response.body?.byteString()?.string(Charset.defaultCharset())}
         }
   }
 
