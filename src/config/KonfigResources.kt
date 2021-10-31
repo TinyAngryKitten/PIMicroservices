@@ -12,8 +12,9 @@ val host by stringType
 val port by intType
 val consulhost by stringType
 val consulport by intType
-val machines by stringType
 
+val machines by stringType
+val healthport by intType
 
 val dbuser by stringType
 val dbpassword by stringType
