@@ -3,7 +3,6 @@ package notifications.discord
 import mu.KotlinLogging
 import notifications.Notification
 import notifications.NotificationSender
-import notifications.TokenStorage
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient

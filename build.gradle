@@ -53,6 +53,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 def arrow_version = "0.10.5"
 
 dependencies {
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "io.vertx:vertx-mqtt:$vertxVersion"
     implementation "io.vertx:vertx-core:$vertxVersion"
