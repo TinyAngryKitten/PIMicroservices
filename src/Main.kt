@@ -4,6 +4,7 @@ import config.*
 import homey.invalidateHomeyToken
 import homey.publishAllVariables
 import homey.updateHomeyToken
+import io.vertx.core.AsyncResult
 import io.vertx.core.Vertx
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
@@ -27,9 +28,21 @@ import org.koin.core.component.inject
 private val logger = KotlinLogging.logger{}
 
 class Main : KoinComponent {
-    private val config : Configuration by inject()
-    private val client: MqttClient by inject()
-    private val vertx : Vertx by inject()
+    val config : Configuration by inject()
+    val client: MqttClient by inject()
+    val vertx: Vertx by inject()
+
+    fun startHealthChecks() {
+        vertx.createHttpServer().requestHandler { request ->
+            request.response()
+                .setStatusCode(if(isHealthy()) 200 else 500)
+                .end()
+        }.listen(config[healthport])
+    }
+
+    private fun isHealthy() : Boolean {
+        return client.isConnected
+    }
 
     fun infiniteLoop() {
 
@@ -68,7 +81,10 @@ class Main : KoinComponent {
                 )
             }
 
-            Main().infiniteLoop()
+            Main().apply {
+                startHealthChecks()
+                infiniteLoop()
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ val consulport by intType
 val homeyip by stringType
 val httpPort by intType
 val updateInterval by intType
+val healthport by intType
 
 val dbuser by stringType
 val dbpassword by stringType
