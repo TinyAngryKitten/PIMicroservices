@@ -1,9 +1,6 @@
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties
-import config.host
-import config.port
-import config.konfigModule
-import config.mainModule
+import config.*
 import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
@@ -22,6 +19,19 @@ private val logger = KotlinLogging.logger{}
 class Main : KoinComponent {
     val config : Configuration by inject()
     val client: MqttClient by inject()
+    val vertx: Vertx by inject()
+
+    fun startHealthChecks() {
+        vertx.createHttpServer().requestHandler { request ->
+            request.response()
+                .setStatusCode(if(isHealthy()) 200 else 500)
+                .end()
+        }.listen(config[healthport])
+    }
+
+    private fun isHealthy() : Boolean {
+        return client.isConnected
+    }
 
     fun infiniteLoop() {
 
@@ -48,7 +58,10 @@ class Main : KoinComponent {
                 )
             }
 
-            Main().infiniteLoop()
+            Main().apply {
+                startHealthChecks()
+                infiniteLoop()
+            }
         }
     }
 }
