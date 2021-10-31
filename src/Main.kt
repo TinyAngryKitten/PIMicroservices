@@ -4,6 +4,9 @@ import config.port
 import config.konfigModule
 import config.mainModule
 import hue.HueController
+import com.natpryce.konfig.ConfigurationProperties
+import config.*
+import io.vertx.core.AsyncResult
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
@@ -25,6 +28,19 @@ class Main : KoinComponent {
 
     val consulClient : ConsulClient by inject()
     val consulOptions : ServiceOptions by inject()
+    val vertx: Vertx by inject()
+
+    fun startHealthChecks() {
+        vertx.createHttpServer().requestHandler { request ->
+            request.response()
+                .setStatusCode(if(isHealthy()) 200 else 500)
+                .end()
+        }.listen(config[healthport])
+    }
+
+    private fun isHealthy() : Boolean {
+        return client.isConnected
+    }
 
     fun infiniteLoop() {
 
@@ -62,7 +78,11 @@ class Main : KoinComponent {
                     config.konfigModule
                 )
             }
-            Main().infiniteLoop()
+
+            Main().apply {
+                startHealthChecks()
+                infiniteLoop()
+            }
         }
     }
 }

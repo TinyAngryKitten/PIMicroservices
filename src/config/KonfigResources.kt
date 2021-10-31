@@ -10,6 +10,7 @@ val consulhost by stringType
 val consulport by intType
 
 val bridgeIp by stringType
+val healthport by intType
 
 val dbuser by stringType
 val dbpassword by stringType
