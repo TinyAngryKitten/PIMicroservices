@@ -6,7 +6,6 @@ import handlers.SimpleConnectHandler
 import handlers.SimpleDisconnectHandler
 import handlers.SimplePublishHandler
 import io.netty.handler.codec.mqtt.MqttQoS
-import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.ext.consul.CheckOptions
@@ -15,11 +14,7 @@ import io.vertx.ext.consul.ConsulClientOptions
 import io.vertx.ext.consul.ServiceOptions
 import io.vertx.mqtt.MqttClient
 import io.vertx.mqtt.MqttClientOptions
-import io.vertx.mqtt.messages.MqttConnAckMessage
 import kotlinx.serialization.json.Json
-import org.http4k.client.ApacheClient
-import org.http4k.core.Request
-import org.http4k.core.Response
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.KMongo

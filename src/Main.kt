@@ -1,22 +1,15 @@
 import com.natpryce.konfig.Configuration
-import com.natpryce.konfig.ConfigurationProperties
 import config.*
 import homey.invalidateHomeyToken
 import homey.publishAllVariables
 import homey.updateHomeyToken
-import io.vertx.core.AsyncResult
 import io.vertx.core.Vertx
 import io.vertx.mqtt.MqttClient
 import mu.KotlinLogging
-import org.http4k.client.ApacheClient
-import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status
 import org.http4k.core.Status.Companion.OK
-import org.http4k.routing.bind
-import org.http4k.routing.routes
-import org.http4k.server.Jetty
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import org.koin.core.context.startKoin
@@ -33,11 +26,10 @@ class Main : KoinComponent {
     val vertx: Vertx by inject()
 
     fun startHealthChecks() {
-        vertx.createHttpServer().requestHandler { request ->
-            request.response()
-                .setStatusCode(if(isHealthy()) 200 else 500)
-                .end()
-        }.listen(config[healthport])
+        { request : Request ->
+            updateHomeyToken(request.bodyString())
+            Response(Status(if(isHealthy()) 200 else 500,""))
+        }.asServer(Netty(config[healthport])).start()
     }
 
     private fun isHealthy() : Boolean {
